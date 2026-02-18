@@ -1,0 +1,143 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AuthResponse {
+  access_token: String!
+  user: User!
+}
+
+input CreateOrderInput {
+  items: [OrderItemInput!]!
+  restaurantId: String!
+}
+
+input CreatePaymentMethodInput {
+  cardHolder: String
+  cardNumber: String
+  expiryDate: String
+  isDefault: Boolean! = false
+  type: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type MenuItem {
+  createdAt: DateTime!
+  description: String
+  id: ID!
+  name: String!
+  price: Float!
+  restaurantId: String!
+  updatedAt: DateTime!
+}
+
+type Mutation {
+  cancelOrder(orderId: String!): Order!
+  checkout(orderId: String!, paymentMethodId: String!): Order!
+  createOrder(input: CreateOrderInput!): Order!
+  createPaymentMethod(input: CreatePaymentMethodInput!): PaymentMethod!
+  login(input: LoginInput!): AuthResponse!
+  register(input: RegisterInput!): User!
+  updatePaymentMethod(id: String!, input: UpdatePaymentMethodInput!): PaymentMethod!
+}
+
+type Order {
+  createdAt: DateTime!
+  id: ID!
+  items: [OrderItem!]!
+  paymentMethod: PaymentMethod
+  paymentMethodId: String
+  restaurant: Restaurant!
+  restaurantId: String!
+  status: String!
+  totalAmount: Float!
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+type OrderItem {
+  createdAt: DateTime!
+  id: ID!
+  menuItem: MenuItem!
+  menuItemId: String!
+  orderId: String!
+  price: Float!
+  quantity: Float!
+}
+
+input OrderItemInput {
+  menuItemId: String!
+  quantity: Float!
+}
+
+type PaymentMethod {
+  cardHolder: String
+  cardNumber: String
+  createdAt: DateTime!
+  expiryDate: String
+  id: ID!
+  isDefault: Boolean!
+  type: String!
+  updatedAt: DateTime!
+  userId: String!
+}
+
+type Query {
+  me: User!
+  menuItems(restaurantId: String!): [MenuItem!]!
+  myOrders: [Order!]!
+  myPaymentMethods: [PaymentMethod!]!
+  order(id: String!): Order
+  paymentMethod(id: String!): PaymentMethod
+  restaurant(id: String!): Restaurant
+  restaurants: [Restaurant!]!
+  users: [User!]!
+}
+
+input RegisterInput {
+  country: String
+  email: String!
+  name: String!
+  password: String!
+  role: String!
+}
+
+type Restaurant {
+  address: String
+  country: String!
+  createdAt: DateTime!
+  description: String
+  id: ID!
+  menuItems: [MenuItem!]
+  name: String!
+  phone: String
+  updatedAt: DateTime!
+}
+
+input UpdatePaymentMethodInput {
+  cardHolder: String
+  cardNumber: String
+  expiryDate: String
+  isDefault: Boolean = false
+  type: String
+}
+
+type User {
+  country: String
+  createdAt: DateTime!
+  email: String!
+  id: ID!
+  name: String!
+  role: String!
+  updatedAt: DateTime!
+}

@@ -1,0 +1,113 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  MEMBER
+}
+
+enum Country {
+  INDIA
+  AMERICA
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+model User {
+  id            String          @id @default(cuid())
+  email         String          @unique
+  password      String
+  name          String
+  role          Role
+  country       Country?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  
+  orders        Order[]
+  paymentMethods PaymentMethod[]
+}
+
+model Restaurant {
+  id            String          @id @default(cuid())
+  name          String
+  description   String?
+  country       Country
+  address       String?
+  phone         String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  
+  menuItems     MenuItem[]
+  orders        Order[]
+}
+
+model MenuItem {
+  id            String          @id @default(cuid())
+  name          String
+  description   String?
+  price         Float
+  restaurantId  String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  
+  restaurant    Restaurant      @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  orderItems    OrderItem[]
+}
+
+model Order {
+  id            String          @id @default(cuid())
+  userId        String
+  restaurantId  String
+  status        OrderStatus     @default(PENDING)
+  totalAmount   Float
+  paymentMethodId String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  
+  user          User            @relation(fields: [userId], references: [id])
+  restaurant    Restaurant      @relation(fields: [restaurantId], references: [id])
+  paymentMethod PaymentMethod?  @relation(fields: [paymentMethodId], references: [id])
+  items         OrderItem[]
+}
+
+model OrderItem {
+  id            String          @id @default(cuid())
+  orderId       String
+  menuItemId    String
+  quantity      Int
+  price         Float
+  createdAt     DateTime        @default(now())
+  
+  order         Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItem      MenuItem        @relation(fields: [menuItemId], references: [id])
+}
+
+model PaymentMethod {
+  id            String          @id @default(cuid())
+  userId        String
+  type          String          // e.g., "credit_card", "debit_card", "paypal"
+  cardNumber    String?         // Last 4 digits or masked
+  cardHolder    String?
+  expiryDate    String?
+  isDefault     Boolean         @default(false)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders        Order[]
+}

@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 245 247 255;
+  --foreground: 15 23 42;
+  --card: 255 255 255;
+  --muted: 100 116 139;
+  --border: 226 232 240;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: 6 8 16;
+    --foreground: 226 232 240;
+    --card: 10 13 24;
+    --muted: 148 163 184;
+    --border: 30 41 59;
+  }
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  color: rgb(var(--foreground));
+  background: radial-gradient(1000px 700px at 20% 0%, rgba(59, 130, 246, 0.20), transparent 60%),
+    radial-gradient(900px 600px at 90% 10%, rgba(34, 197, 94, 0.12), transparent 55%),
+    radial-gradient(800px 600px at 60% 100%, rgba(168, 85, 247, 0.10), transparent 60%),
+    rgb(var(--background));
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+    "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .surface {
+    @apply bg-card/70 border border-border/70 backdrop-blur-xl shadow-glow;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/60 px-3 py-1 text-xs text-foreground/80 backdrop-blur;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium transition;
+  }
+  .btn-primary {
+    @apply btn bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800;
+  }
+  .btn-secondary {
+    @apply btn bg-card/60 border border-border/70 text-foreground hover:bg-card/80;
+  }
+  .btn-ghost {
+    @apply btn bg-transparent text-foreground/80 hover:bg-card/40;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-border/70 bg-card/50 px-4 py-3 text-sm text-foreground placeholder:text-foreground/40 outline-none ring-0 focus:border-brand-400/70 focus:ring-4 focus:ring-brand-400/10;
+  }
+}
