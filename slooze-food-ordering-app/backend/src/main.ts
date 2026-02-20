@@ -4,15 +4,19 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
+
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
-    // Allow Next dev server on localhost/127.0.0.1 (any port) during development.
-    origin: [/^http:\/\/localhost:\d+$/, /^http:\/\/127\.0\.0\.1:\d+$/],
+    origin: [
+      'http://localhost:3000',          // frontend local dev
+      'http://127.0.0.1:3000',          // frontend local dev (alternate)
+      'https://slooze-kappa.vercel.app', // frontend production
+    ],
     credentials: true,
   });
 
-  await app.listen(4000);
-  console.log('🚀 Server running on http://localhost:4000/graphql');
+  const port = process.env.PORT || 4000;
+  await app.listen(port);
+  console.log(`🚀 Server running on port ${port}/graphql`);
 }
 bootstrap();
